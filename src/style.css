@@ -1,0 +1,277 @@
+:root {
+  --ui-bg: #050505;
+  --ui-surface: #111;
+  --ui-text: #e0e0e0;
+  --ui-accent: #ff00ff; /* Magenta */
+  --ui-accent-2: #00ffff; /* Cyan */
+  --ui-border: #333;
+  --ui-grid: rgba(255, 255, 255, 0.05);
+  --font-tech: 'Space Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--ui-bg);
+  color: var(--ui-text);
+  font-family: var(--font-tech);
+  min-height: 100vh;
+  overflow-x: hidden;
+  
+  /* Abstract Noise / Grid */
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 1) 0%, rgba(5, 5, 5, 1) 100%),
+    linear-gradient(var(--ui-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ui-grid) 1px, transparent 1px);
+  background-size: 
+    100% 100%,
+    40px 40px,
+    40px 40px;
+  background-position: center center;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  border-bottom: 1px solid var(--ui-accent);
+  display: inline-block;
+  padding-bottom: 0.5rem;
+  color: var(--ui-accent-2);
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  color: #bbb;
+}
+
+/* Layout Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* UI Components */
+.ui-box {
+  border: 1px solid var(--ui-border);
+  padding: 2rem;
+  position: relative;
+  background: rgba(10, 10, 10, 0.8);
+  margin-bottom: 3rem;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.3s ease;
+}
+
+.ui-box:hover {
+  border-color: var(--ui-accent);
+}
+
+.ui-header {
+  text-align: center;
+  margin-bottom: 5rem;
+  padding: 4rem 2rem;
+  position: relative;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.ui-header h1 {
+  font-size: 4rem;
+  margin: 0;
+  position: relative;
+  color: #fff;
+}
+
+.ui-header .subtitle {
+  font-size: 1rem;
+  color: var(--ui-accent);
+  letter-spacing: 3px;
+  margin-top: 1rem;
+  display: block;
+  text-shadow: 0 0 10px var(--ui-accent);
+}
+
+/* Technical Markers */
+.tech-marker {
+  position: absolute;
+  font-size: 0.6rem;
+  color: #555;
+  font-family: monospace;
+}
+
+.tm-tl { top: 10px; left: 10px; }
+.tm-tr { top: 10px; right: 10px; }
+.tm-bl { bottom: 10px; left: 10px; }
+.tm-br { bottom: 10px; right: 10px; }
+
+/* Transaction Grid */
+.transaction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.deal-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  background: #0a0a0a;
+  border: 1px solid #222;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.deal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-color: var(--ui-accent-2);
+}
+
+.deal-title {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.deal-type {
+  color: var(--ui-accent);
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.deal-meta {
+  font-size: 0.85rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: auto;
+  border-top: 1px solid #222;
+  padding-top: 1rem;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-label {
+  font-size: 0.65rem;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.meta-value {
+  color: #ddd;
+  font-weight: bold;
+}
+
+.status-active { color: #0f0; text-shadow: 0 0 5px #0f0; }
+.status-completed { color: #888; }
+.status-pending { color: #ff0; }
+.status-exited { color: var(--ui-accent); }
+.status-unknown { color: var(--ui-accent-2); }
+
+/* Glitch Effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--ui-bg);
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -1px 0 #ff00c1;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -1px 0 #00fff9;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(30px, 9999px, 10px, 0); }
+  5% { clip: rect(70px, 9999px, 90px, 0); }
+  10% { clip: rect(10px, 9999px, 80px, 0); }
+  15% { clip: rect(50px, 9999px, 20px, 0); }
+  20% { clip: rect(20px, 9999px, 60px, 0); }
+  25% { clip: rect(90px, 9999px, 30px, 0); }
+  30% { clip: rect(10px, 9999px, 50px, 0); }
+  35% { clip: rect(60px, 9999px, 10px, 0); }
+  40% { clip: rect(40px, 9999px, 90px, 0); }
+  45% { clip: rect(80px, 9999px, 20px, 0); }
+  50% { clip: rect(30px, 9999px, 60px, 0); }
+  55% { clip: rect(70px, 9999px, 10px, 0); }
+  60% { clip: rect(20px, 9999px, 50px, 0); }
+  65% { clip: rect(90px, 9999px, 30px, 0); }
+  70% { clip: rect(10px, 9999px, 80px, 0); }
+  75% { clip: rect(50px, 9999px, 20px, 0); }
+  80% { clip: rect(30px, 9999px, 60px, 0); }
+  85% { clip: rect(80px, 9999px, 10px, 0); }
+  90% { clip: rect(40px, 9999px, 50px, 0); }
+  95% { clip: rect(60px, 9999px, 90px, 0); }
+  100% { clip: rect(20px, 9999px, 30px, 0); }
+}
+
+@keyframes glitch-anim2 {
+  0% { clip: rect(10px, 9999px, 80px, 0); }
+  5% { clip: rect(50px, 9999px, 20px, 0); }
+  10% { clip: rect(30px, 9999px, 60px, 0); }
+  15% { clip: rect(80px, 9999px, 10px, 0); }
+  20% { clip: rect(40px, 9999px, 90px, 0); }
+  25% { clip: rect(60px, 9999px, 30px, 0); }
+  30% { clip: rect(20px, 9999px, 50px, 0); }
+  35% { clip: rect(90px, 9999px, 30px, 0); }
+  40% { clip: rect(10px, 9999px, 80px, 0); }
+  45% { clip: rect(50px, 9999px, 20px, 0); }
+  50% { clip: rect(30px, 9999px, 60px, 0); }
+  55% { clip: rect(80px, 9999px, 10px, 0); }
+  60% { clip: rect(40px, 9999px, 90px, 0); }
+  65% { clip: rect(60px, 9999px, 30px, 0); }
+  70% { clip: rect(20px, 9999px, 50px, 0); }
+  75% { clip: rect(90px, 9999px, 30px, 0); }
+  80% { clip: rect(10px, 9999px, 80px, 0); }
+  85% { clip: rect(50px, 9999px, 20px, 0); }
+  90% { clip: rect(30px, 9999px, 60px, 0); }
+  95% { clip: rect(80px, 9999px, 10px, 0); }
+  100% { clip: rect(40px, 9999px, 50px, 0); }
+}
+
+/* Scanline */
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.3;
+}
