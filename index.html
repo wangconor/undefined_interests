@@ -8,6 +8,187 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+      /* Chatbot Styles */
+      #chatbot-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--ui-accent-2), var(--ui-accent));
+        color: #000;
+        border: 2px solid var(--ui-accent-2);
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        z-index: 1000;
+        font-family: 'Space Mono', monospace;
+        transition: all 0.3s;
+      }
+      
+      #chatbot-toggle:hover {
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+        transform: scale(1.1);
+      }
+
+      #chatbot-window {
+        display: none;
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 350px;
+        max-width: 90vw;
+        height: 550px;
+        border: 2px solid var(--ui-accent-2);
+        border-radius: 0;
+        background: rgba(0, 0, 0, 0.95);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        z-index: 1000;
+        flex-direction: column;
+        font-family: 'Space Mono', monospace;
+      }
+
+      #chatbot-header {
+        background: linear-gradient(135deg, var(--ui-accent-2), var(--ui-accent));
+        color: #000;
+        padding: 15px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid var(--ui-accent-2);
+      }
+
+      #chatbot-close {
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: bold;
+        transition: transform 0.2s;
+      }
+
+      #chatbot-close:hover {
+        transform: scale(1.2);
+      }
+
+      #chatbot-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px;
+        background: #000;
+        color: var(--ui-accent-2);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      #chatbot-messages::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      #chatbot-messages::-webkit-scrollbar-track {
+        background: #000;
+      }
+
+      #chatbot-messages::-webkit-scrollbar-thumb {
+        background: var(--ui-accent-2);
+        border-radius: 4px;
+      }
+
+      .chat-message {
+        margin-bottom: 15px;
+        animation: fadeIn 0.3s;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .chat-message strong {
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 1px;
+      }
+
+      .user-msg strong { color: var(--ui-accent); }
+      .bot-msg strong { color: var(--ui-accent-2); }
+      .error-msg strong { color: #f00; }
+
+      .chat-message-content code {
+        background: rgba(0, 255, 255, 0.1);
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-family: 'Space Mono', monospace;
+        border: 1px solid var(--ui-accent-2);
+      }
+
+      .chat-message-content em {
+        font-style: italic;
+        opacity: 0.8;
+      }
+
+      .chat-message-content {
+        padding-left: 10px;
+        border-left: 2px solid var(--ui-accent-2);
+      }
+
+      #chatbot-input-area {
+        padding: 15px;
+        border-top: 2px solid var(--ui-accent-2);
+        background: #000;
+        display: flex;
+        gap: 10px;
+      }
+
+      #chatbot-input {
+        flex: 1;
+        padding: 10px;
+        background: #000;
+        border: 1px solid var(--ui-accent-2);
+        color: var(--ui-accent-2);
+        font-family: 'Space Mono', monospace;
+        font-size: 13px;
+        outline: none;
+      }
+
+      #chatbot-input:focus {
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      }
+
+      #chatbot-send {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, var(--ui-accent-2), var(--ui-accent));
+        color: #000;
+        border: 1px solid var(--ui-accent-2);
+        cursor: pointer;
+        font-family: 'Space Mono', monospace;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 12px;
+        transition: all 0.2s;
+      }
+
+      #chatbot-send:hover {
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+        transform: translateY(-2px);
+      }
+
+      #chatbot-send:active {
+        transform: translateY(0);
+      }
+
+      .thinking {
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+    </style>
   </head>
   <body>
     <div class="scanline"></div>
@@ -40,7 +221,118 @@
         </div>
       </section>
     </div>
-    
+
+    <!-- Chatbot Button -->
+    <button id="chatbot-toggle">AI</button>
+
+    <!-- Chatbot Window -->
+    <div id="chatbot-window">
+      <div id="chatbot-header">
+        <span>INVESTMENT_QUERY // v1.0</span>
+        <span id="chatbot-close">×</span>
+      </div>
+      <div id="chatbot-messages"></div>
+      <div id="chatbot-input-area">
+        <input type="text" id="chatbot-input" placeholder="QUERY: _" />
+        <button id="chatbot-send">SEND</button>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
+    
+    <script>
+      // Chatbot Logic
+      const WORKER_URL = 'https://portfolio-chatbot.conor-g-wang.workers.dev/api/chat';
+
+      const toggle = document.getElementById('chatbot-toggle');
+      const chatWindow = document.getElementById('chatbot-window');
+      const closeBtn = document.getElementById('chatbot-close');
+      const messages = document.getElementById('chatbot-messages');
+      const input = document.getElementById('chatbot-input');
+      const sendBtn = document.getElementById('chatbot-send');
+
+      toggle.onclick = () => {
+        chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+        if (chatWindow.style.display === 'flex') {
+          input.focus();
+        }
+      };
+
+      closeBtn.onclick = () => {
+        chatWindow.style.display = 'none';
+      };
+
+      async function sendMessage() {
+        const message = input.value.trim();
+        if (!message) return;
+
+        // Display user message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'chat-message user-msg';
+        userMsg.innerHTML = `<strong>// USER_INPUT</strong><div class="chat-message-content">${escapeHtml(message)}</div>`;
+        messages.appendChild(userMsg);
+        input.value = '';
+        messages.scrollTop = messages.scrollHeight;
+
+        // Create bot response container
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-message bot-msg';
+        botMsg.innerHTML = '<strong>// AI_RESPONSE</strong><div class="chat-message-content thinking">Processing query...</div>';
+        messages.appendChild(botMsg);
+        messages.scrollTop = messages.scrollHeight;
+
+        try {
+          const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+          });
+
+          const data = await response.json();
+          
+          if (data.error) {
+            botMsg.className = 'chat-message error-msg';
+            botMsg.innerHTML = `<strong>// ERROR</strong><div class="chat-message-content">${escapeHtml(data.error)}</div>`;
+          } else {
+            botMsg.innerHTML = `<strong>// AI_RESPONSE</strong><div class="chat-message-content">${formatMessage(data.response)}</div>`;
+          }
+          
+          messages.scrollTop = messages.scrollHeight;
+        } catch (error) {
+          botMsg.className = 'chat-message error-msg';
+          botMsg.innerHTML = `<strong>// CONNECTION_ERROR</strong><div class="chat-message-content">${escapeHtml(error.message)}</div>`;
+        }
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function formatMessage(text) {
+        // First escape HTML to prevent XSS
+        let formatted = escapeHtml(text);
+        
+        // Bold: **text**
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Italic: *text*
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Code: `text`
+        formatted = formatted.replace(/`(.*?)`/g, '<code>$1</code>');
+        
+        // Newlines to <br>
+        formatted = formatted.replace(/\n/g, '<br>');
+        
+        return formatted;
+      }
+
+      sendBtn.onclick = sendMessage;
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+      });
+    </script>
   </body>
 </html>

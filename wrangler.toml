@@ -1,5 +1,6 @@
-name = "gantryworksmock"
-compatibility_date = "2025-11-23"
+name = "portfolio-chatbot"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
 
-[assets]
-directory = "./dist"
+[ai]
+binding = "AI"
